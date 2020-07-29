@@ -1,0 +1,69 @@
+const [button] = await page.$x("//button[contains(., 'Button text')]");
+if (button) {
+    await button.click();
+}
+
+const [button] = await page.$x("//div[@class='elements']/button[contains(., 'Button text')]");
+
+// **********************************************************************************************************
+
+
+const select = require ('puppeteer-select');
+
+const element = await select(page).getElement('button:contains(Button text)');
+await element.click()
+
+
+
+// **********************************************************************************************************
+
+
+await page.evaluate(() => {
+  [...document.querySelectorAll('.elements button')].find(element => element.textContent === 'Button text').click();
+});
+
+
+await page.evaluate(() => {
+  const xpath = '//*[@class="elements"]//button[contains(text(), "Button text")]';
+  const result = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
+
+  result.iterateNext().click();
+});
+
+
+// **********************************************************************************************************
+
+
+let selector = 'a';
+    await page.$$eval(selector, anchors => {
+        anchors.map(anchor => {
+            if(anchor.textContent == 'target text') {
+                anchor.click();
+                return
+            }
+        })
+    });
+    
+    
+    
+    
+    
+    // **********************************************************************************************************
+    
+    
+    (await page.$$eval(selector, a => a
+            .filter(a => a.textContent === 'target text')
+))[0].click()
+    
+    
+    // **********************************************************************************************************
+    
+    
+    
+    await page.$$eval('selector', selectorMatched => {
+    for(i in selectorMatched)
+      if(selectorMatched[i].textContent === 'text string'){
+          selectorMatched[i].click();
+          break;//Remove this line (break statement) if you want to click on all matched elements otherwise the first element only is clicked  
+        }
+    });
